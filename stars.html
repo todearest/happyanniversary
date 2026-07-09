@@ -11,8 +11,6 @@
     />
     <link rel="stylesheet" href="style.css" />
     <style>
-      /* Page 5 — unique: warm purple dominant, feels like a final resting point */
-
       /* Aurora shifts warmer on this page */
       .aurora-band-1 {
         background: radial-gradient(
@@ -36,12 +34,17 @@
         ) !important;
       }
 
-      /* Stars page header — script-heavy, intimate */
+      /* LAYOUT FIX: Flexbox & spacing prevents text from squishing into the button */
       .stars-hero-big {
-        padding: 8rem 2rem 2rem;
-        text-align: center;
         position: relative;
         z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 45vh;
+        padding: 6rem 1.5rem 2rem;
+        text-align: center;
       }
       .stars-hero-big .pre {
         font-family: var(--f-body);
@@ -57,9 +60,14 @@
       }
       .stars-hero-big h1 {
         font-family: var(--f-script);
-        font-size: clamp(4rem, 12vw, 9rem);
+        font-size: clamp(
+          3.5rem,
+          12vw,
+          7rem
+        ); /* Reduced max-size for mobile safety */
         color: var(--aurora);
-        line-height: 0.95;
+        line-height: 1.1; /* Prevents text from collapsing */
+        margin: 0.5rem 0;
         text-shadow: 0 0 60px rgba(240, 171, 252, 0.4);
         opacity: 0;
         animation: fadeUp 0.9s ease forwards 0.5s;
@@ -70,25 +78,24 @@
         font-weight: 300;
         font-style: italic;
         color: var(--txt-dim);
-        margin-top: 1.2rem;
+        margin-top: 1.5rem;
         line-height: 1.8;
         opacity: 0;
         animation: fadeUp 0.9s ease forwards 0.7s;
       }
 
-      /* Instruction */
       .sky-instruction {
         font-family: var(--f-body);
         font-size: 0.72rem;
         font-weight: 300;
         letter-spacing: 2px;
-        color: rgba(192, 132, 252, 0.45);
+        color: rgba(192, 132, 252, 0.6);
         text-align: center;
-        margin: 1rem auto 0;
+        margin: 2rem auto 1.5rem;
         text-transform: uppercase;
       }
 
-      /* Promise section — very final, emotional */
+      /* Promise section */
       .promise-section {
         position: relative;
         z-index: 2;
@@ -143,50 +150,68 @@
         margin-bottom: 2.5rem;
       }
 
-      /* Final photo polaroid collage */
+      /* AESTHETIC FIX: Glowing space polaroids applied to the final gallery */
       .final-collage {
         display: flex;
-        gap: 1.2rem;
+        gap: 1.5rem;
         justify-content: center;
         flex-wrap: wrap;
         margin: 3rem auto;
         max-width: 500px;
       }
       .collage-frame {
-        background: rgba(27, 10, 61, 0.7);
-        border: 1px solid rgba(192, 132, 252, 0.15);
+        position: relative;
+        background: rgba(20, 8, 45, 0.85);
+        border: 1px solid rgba(240, 171, 252, 0.3);
         padding: 8px 8px 32px;
-        border-radius: 3px;
-        box-shadow: 0 15px 40px rgba(10, 5, 20, 0.4);
-        transition: transform 0.4s ease;
+        border-radius: 6px;
+        box-shadow:
+          0 15px 30px rgba(0, 0, 0, 0.6),
+          0 0 15px rgba(192, 132, 252, 0.2);
+        transition:
+          transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          box-shadow 0.4s;
+      }
+      .collage-frame::after {
+        content: "✦";
+        position: absolute;
+        bottom: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(240, 171, 252, 0.7);
+        font-size: 16px;
+        text-shadow: 0 0 8px rgba(240, 171, 252, 0.8);
+        pointer-events: none;
       }
       .collage-frame:nth-child(1) {
-        transform: rotate(-3deg);
+        transform: rotate(-4deg);
       }
       .collage-frame:nth-child(2) {
-        transform: rotate(1.5deg);
+        transform: rotate(2deg);
         margin-top: -10px;
       }
       .collage-frame:nth-child(3) {
-        transform: rotate(-1deg);
+        transform: rotate(-2deg);
         margin-top: 8px;
       }
       .collage-frame:hover {
-        transform: rotate(0deg) scale(1.04) !important;
+        transform: rotate(0deg) scale(1.05) translateY(-5px) !important;
+        box-shadow:
+          0 25px 40px rgba(0, 0, 0, 0.7),
+          0 0 30px rgba(240, 171, 252, 0.5);
+        z-index: 10;
       }
       .collage-frame img {
         width: 130px;
         height: 170px;
         object-fit: cover;
         display: block;
-        filter: brightness(0.88);
+        filter: brightness(0.9) contrast(1.1);
+        transition: filter 0.4s;
+        border-radius: 2px;
       }
-      .collage-caption {
-        font-family: var(--f-script);
-        font-size: 0.95rem;
-        color: var(--lavender);
-        text-align: center;
-        margin-top: 6px;
+      .collage-frame:hover img {
+        filter: brightness(1) contrast(1);
       }
 
       /* Back to start link */
@@ -467,7 +492,7 @@
         bikin kamu kesal, masih akan belajar.
       </p>
       <p class="promise-sub reveal">
-        Tapi di antara semua ketidakpastian itu, ada satu hal yang aku
+        Tapi di antara semua ketidakpastian itu — ada satu hal yang aku
         yakinin:<br />
         aku mau terus ada buat kamu. Mau terus milih kamu. Setiap hari, di
         setiap semesta yang ada.
@@ -475,7 +500,7 @@
 
       <div class="seal-section reveal">
         <p style="margin-bottom: 1.5rem">
-          tahan tombol di bawah untuk segel janjinya 💜
+          tahan tombol di bawah untuk menyegel janjinya 💜
         </p>
         <button class="seal-btn" aria-label="Hold to seal">
           <span style="position: relative; z-index: 2">💜</span>
@@ -491,7 +516,6 @@
             alt="her"
             onerror="this.src = 'https://picsum.photos/seed/fc3/130/170'"
           />
-          <div class="collage-caption">kamu 🌸</div>
         </div>
         <div class="collage-frame">
           <img
@@ -499,7 +523,6 @@
             alt="her"
             onerror="this.src = 'https://picsum.photos/seed/fc7/130/170'"
           />
-          <div class="collage-caption">selalu 💜</div>
         </div>
         <div class="collage-frame">
           <img
@@ -507,7 +530,6 @@
             alt="her"
             onerror="this.src = 'https://picsum.photos/seed/fc9/130/170'"
           />
-          <div class="collage-caption">to forever and more✦</div>
         </div>
       </div>
 
@@ -545,108 +567,52 @@
 
     <div style="height: 60px"></div>
 
-    <script src="script.js"></script>
     <script>
-      // Execute immediately instead of waiting for DOMContentLoaded (which fails in SPA)
-      (function initStarsPage() {
-        // 1. Re-initialize the background canvas if we arrived here via the SPA router
-        if (typeof initStarfield === "function") {
-          initStarfield();
-        }
-
-        // 2. Define the star wishes
-        window.STAR_WISHES = [
-          {
-            icon: "💜",
-            title: "Kamu adalah rumahku",
-            body: "Di antara semua tempat di dunia ini, bersamamu adalah tempat yang paling bikin aku merasa tenang. Kamu adalah pulang yang paling aku rindukan.",
-          },
-          {
-            icon: "🌙",
-            title: "Satu hal yang aku syukuri",
-            body: "Setiap hari aku bersyukur kita ada di garis waktu yang sama. Dari sekian banyak kemungkinan di alam semesta ini — aku ketemu kamu.",
-          },
-          {
-            icon: "✨",
-            title: "Tentang tawamu",
-            body: "Tawa kamu adalah salah satu suara favorit aku di dunia. Aku gak pernah bosen dengerin itu, dan aku gak mau bosen.",
-          },
-          {
-            icon: "🌸",
-            title: "Ketika kamu ada",
-            body: "Hal-hal kecil jadi terasa lebih bermakna. Makan bareng biasa aja jadi memorable. Duduk diem bareng pun cukup. Itu kamu — yang bikin semua momen jadi berarti.",
-          },
-          {
-            icon: "⭐",
-            title: "Kamu adalah bintang terbaikku",
-            body: "Di antara semua bintang di langit ini, kamu yang paling aku cari duluan. Yang paling aku perhatiin. Yang paling aku sayangin.",
-          },
-          {
-            icon: "💫",
-            title: "Maaf dan terima kasih",
-            body: "Makasi udah mau sabar sama semua kekuranganku. Dan maaf karena belum selalu bisa jadi yang kamu harapin. Aku masih belajar — tapi aku belajar buat kamu juga.",
-          },
-          {
-            icon: "🌌",
-            title: "Harapanku",
-            body: "Semoga kita masih bareng ngelewatin banyak hal. Hal-hal besar yang kita rencanain, dan hal-hal kecil yang gak pernah kita sangka. Dua-duanya, bareng kamu.",
-          },
-          {
-            icon: "❤️",
-            title: "Yang paling penting",
-            body: "I love you. Bukan cuma hari ini, bukan cuma di anniversary — tapi setiap hari, dalam setiap versi dari kita yang terus berubah. Selalu.",
-          },
-        ];
-
-        // 3. Wire up star card safely
-        const cardBox = document.getElementById("star-card");
-        const overlay = document.getElementById("star-overlay");
-
-        document.querySelectorAll(".wish-star").forEach((star, i) => {
-          // Clone node to strip any duplicate listeners from script.js to ensure it runs cleanly
-          const newStar = star.cloneNode(true);
-          star.parentNode.replaceChild(newStar, star);
-
-          newStar.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const w = window.STAR_WISHES[i];
-            if (!w) return;
-
-            document.getElementById("sc-icon").textContent = w.icon;
-            document.getElementById("sc-title").textContent = w.title;
-            document.getElementById("sc-body").textContent = w.body;
-
-            cardBox?.classList.add("show");
-            overlay?.classList.add("show");
-
-            // Mini burst effect
-            const rect = newStar.getBoundingClientRect();
-            ["✨", "💜", "⭐", "🌸"].forEach((em, k) => {
-              const sp = document.createElement("div");
-              sp.style.cssText = `position:fixed;left:${rect.left + 8}px;top:${rect.top + 8}px;font-size:.85rem;pointer-events:none;z-index:9999;transition:all .8s ease;`;
-              sp.textContent = em;
-              document.body.appendChild(sp);
-              const a = (k / 4) * Math.PI * 2,
-                d = 35 + Math.random() * 20;
-              setTimeout(() => {
-                sp.style.transform = `translate(${Math.cos(a) * d}px,${Math.sin(a) * d - 15}px)`;
-                sp.style.opacity = "0";
-              }, 60);
-              setTimeout(() => sp.remove(), 900);
-            });
-          });
-        });
-
-        function closeCard() {
-          cardBox?.classList.remove("show");
-          overlay?.classList.remove("show");
-        }
-
-        overlay?.addEventListener("click", closeCard);
-        document
-          .getElementById("sc-close")
-          ?.addEventListener("click", closeCard);
-      })();
+      // This defines the text for your stars so script.js can use it!
+      window.STAR_WISHES = [
+        {
+          icon: "💜",
+          title: "Kamu adalah rumahku",
+          body: "Di antara semua tempat di dunia ini, bersamamu adalah tempat yang paling bikin aku merasa tenang. Kamu adalah pulang yang paling aku rindukan.",
+        },
+        {
+          icon: "🌙",
+          title: "Satu hal yang aku syukuri",
+          body: "Setiap hari aku bersyukur kita ada di garis waktu yang sama. Dari sekian banyak kemungkinan di alam semesta ini — aku ketemu kamu.",
+        },
+        {
+          icon: "✨",
+          title: "Tentang tawamu",
+          body: "Tawa kamu adalah salah satu suara favorit aku di dunia. Aku gak pernah bosen dengerin itu, dan aku gak mau bosen.",
+        },
+        {
+          icon: "🌸",
+          title: "Ketika kamu ada",
+          body: "Hal-hal kecil jadi terasa lebih bermakna. Makan bareng biasa aja jadi memorable. Duduk diem bareng pun cukup. Itu kamu — yang bikin semua momen jadi berarti.",
+        },
+        {
+          icon: "⭐",
+          title: "Kamu adalah bintang terbaikku",
+          body: "Di antara semua bintang di langit ini, kamu yang paling aku cari duluan. Yang paling aku perhatiin. Yang paling aku sayangin.",
+        },
+        {
+          icon: "💫",
+          title: "Maaf dan terima kasih",
+          body: "Makasi udah mau sabar sama semua kekuranganku. Dan maaf karena belum selalu bisa jadi yang kamu harapin. Aku masih belajar — tapi aku belajar buat kamu juga.",
+        },
+        {
+          icon: "🌌",
+          title: "Harapanku",
+          body: "Semoga kita masih bareng ngelewatin banyak hal. Hal-hal besar yang kita rencanain, dan hal-hal kecil yang gak pernah kita sangka. Dua-duanya, bareng kamu.",
+        },
+        {
+          icon: "❤️",
+          title: "Yang paling penting",
+          body: "I love you. Bukan cuma hari ini, bukan cuma di anniversary — tapi setiap hari, dalam setiap versi dari kita yang terus berubah. Selalu.",
+        },
+      ];
     </script>
+
+    <script src="script.js"></script>
   </body>
 </html>
