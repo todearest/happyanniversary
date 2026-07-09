@@ -70,7 +70,9 @@ async function navigateTo(url) {
   if (ov) ov.classList.add("on");
 
   try {
-    const res = await fetch(url, { cache: "no-cache" });
+    // FIX 1: Add a timestamp parameter to completely bypass GitHub Pages cache
+    const cacheBuster = url.includes("?") ? `&v=${Date.now()}` : `?v=${Date.now()}`;
+    const res = await fetch(url + cacheBuster, { cache: "no-store" });
     const html = await res.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -78,21 +80,23 @@ async function navigateTo(url) {
     setTimeout(() => {
       document.title = doc.title;
 
-      const existingStyles = Array.from(
-        document.head.querySelectorAll("style"),
-      );
-      doc.head.querySelectorAll("style").forEach((newStyle) => {
-        const isDuplicate = existingStyles.some(
-          (s) => s.innerHTML === newStyle.innerHTML,
-        );
-        if (!isDuplicate) {
+      // FIX 2: Check for styles AND stylesheets to guarantee styling is updated
+      const existingStyles = Array.from(document.head.querySelectorAll("style, link[rel='stylesheet']")).map(el => el.outerHTML);
+      doc.head.querySelectorAll("style, link[rel='stylesheet']").forEach((newStyle) => {
+        if (!existingStyles.includes(newStyle.outerHTML)) {
           document.head.appendChild(newStyle.cloneNode(true));
         }
       });
 
       document.body.innerHTML = doc.body.innerHTML;
+
+      // FIX 3: Re-evaluate scripts, but NEVER re-run script.js to prevent JS crashing
       const scripts = document.body.querySelectorAll("script");
       scripts.forEach((oldScript) => {
+        if (oldScript.src && oldScript.src.includes("script.js")) {
+          oldScript.remove(); // Stop it from running twice and crashing the page!
+          return;
+        }
         const newScript = document.createElement("script");
         Array.from(oldScript.attributes).forEach((attr) =>
           newScript.setAttribute(attr.name, attr.value),
@@ -151,27 +155,9 @@ function initStarfield() {
   const ctx = canvas.getContext("2d");
   let W, H;
   const layers = [
-    {
-      count: 80,
-      r: [0.3, 0.8],
-      speed: 0.015,
-      alpha: [0.2, 0.5],
-      color: [192, 132, 252],
-    },
-    {
-      count: 50,
-      r: [0.8, 1.5],
-      speed: 0.035,
-      alpha: [0.4, 0.8],
-      color: [224, 242, 254],
-    },
-    {
-      count: 20,
-      r: [1.5, 2.5],
-      speed: 0.07,
-      alpha: [0.6, 1.0],
-      color: [240, 171, 252],
-    },
+    { count: 80, r: [0.3, 0.8], speed: 0.015, alpha: [0.2, 0.5], color: [192, 132, 252] },
+    { count: 50, r: [0.8, 1.5], speed: 0.035, alpha: [0.4, 0.8], color: [224, 242, 254] },
+    { count: 20, r: [1.5, 2.5], speed: 0.07, alpha: [0.6, 1.0], color: [240, 171, 252] },
   ];
   let stars = [];
   let mouse = { x: 0, y: 0 };
@@ -225,6 +211,9 @@ function initStarfield() {
   }
 
   function draw() {
+    // FIX 4: Prevent memory leak/crashes when navigating away from the canvas page
+    if (!document.body.contains(canvas)) return; 
+    
     ctx.clearRect(0, 0, W, H);
     const dx = mouse.x + gyro.x,
       dy = mouse.y + gyro.y;
@@ -253,13 +242,16 @@ function initStarfield() {
   draw();
 
   function shootStar() {
+    if (!document.body.contains(canvas)) return;
     const el = document.createElement("div");
     el.style.cssText = `position:fixed; top:${5 + Math.random() * 40}%; left:-60px; width:${60 + Math.random() * 80}px; height:1.5px; background:linear-gradient(90deg,transparent,rgba(240,171,252,.8),white); border-radius:2px; pointer-events:none; z-index:1; animation:shootStar ${1.5 + Math.random()}s ease forwards;`;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 2500);
   }
+  
+  if (window.starInterval) clearInterval(window.starInterval);
+  window.starInterval = setInterval(shootStar, 5000 + Math.random() * 5000);
   shootStar();
-  setInterval(shootStar, 5000 + Math.random() * 5000);
 }
 
 function setupReveal() {
