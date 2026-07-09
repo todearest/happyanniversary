@@ -60,7 +60,7 @@ function updateMusicUI() {
   if (wave) wave.classList.toggle("paused", !isPlaying);
 }
 
-// ── TRUE SPA NAVIGATION ──
+// ── SPA NAVIGATION ──
 async function navigateTo(url) {
   if (audio && !audio.paused) {
     sessionStorage.setItem(TKEY, audio.currentTime);
