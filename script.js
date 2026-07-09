@@ -70,17 +70,27 @@ async function navigateTo(url) {
   if (ov) ov.classList.add("on");
 
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { cache: "no-cache" });
     const html = await res.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
 
     setTimeout(() => {
       document.title = doc.title;
-      document.body.innerHTML = doc.body.innerHTML;
 
-      // FIX: Re-evaluate <script> tags injected via innerHTML
-      // Without this, the window.STAR_WISHES array in letter.html is ignored by the browser
+      const existingStyles = Array.from(
+        document.head.querySelectorAll("style"),
+      );
+      doc.head.querySelectorAll("style").forEach((newStyle) => {
+        const isDuplicate = existingStyles.some(
+          (s) => s.innerHTML === newStyle.innerHTML,
+        );
+        if (!isDuplicate) {
+          document.head.appendChild(newStyle.cloneNode(true));
+        }
+      });
+
+      document.body.innerHTML = doc.body.innerHTML;
       const scripts = document.body.querySelectorAll("script");
       scripts.forEach((oldScript) => {
         const newScript = document.createElement("script");
