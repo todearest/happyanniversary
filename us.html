@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Orbitku, Kamu — Nebula Diary</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪐</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Outfit:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <div class="aurora-bg">
+      <div class="aurora-band aurora-band-1"></div>
+      <div class="aurora-band aurora-band-2"></div>
+    </div>
+    <div id="page-transition"></div>
+
+    <a href="index.html" class="back-nav" data-nav>← beranda</a>
+
+    <div id="music-player">
+      <button id="music-btn">♫</button>
+      <div class="music-meta">
+        <span class="music-title">Our Song</span>
+        <span class="music-artist">For You</span>
+      </div>
+      <div class="music-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="orbit-page">
+      <header class="orbit-header">
+        <h1>Orbitku, <em>Kamu</em></h1>
+        <p>putar, sentuh, dan lihat pesonamu di setiap planet ✦</p>
+      </header>
+
+      <div class="orbit-system">
+        <div class="orbit-ring-svg"></div>
+        <div class="orbit-center-zone">
+          <span class="orbit-center-label">pusat</span>
+          <span class="orbit-center-name">semestaku</span>
+        </div>
+
+        <div id="orbit-wrap" data-radius="220">
+          <div
+            class="orbit-planet"
+            data-idx="0"
+            data-title="Si Kacamata Cantik"
+            data-story="Liat deh gaya kamu topang dagu gini. Bikin aku makin sadar kalau kamu emang secantik itu, pas lagi sesantai apa pun."
+          >
+            <img
+              src="asset/1.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o1/150/150'"
+            />
+          </div>
+
+          <div
+            class="orbit-planet"
+            data-idx="1"
+            data-title="Mata Teduhku"
+            data-story="Aku selalu suka tatapan kamu di foto ini. Adem banget. Kayak ngingetin aku kalau kamu adalah satu-satunya tempatku pulang."
+          >
+            <img
+              src="asset/2.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o2/150/150'"
+            />
+          </div>
+
+          <div
+            class="orbit-planet"
+            data-idx="2"
+            data-title="My Prettiest Girl"
+            data-story="Kamu lagi ga nengok aja bikin aku terpanah! Cantik, selalu cantik."
+          >
+            <img
+              src="asset/3.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o3/150/150'"
+            />
+          </div>
+
+          <div
+            class="orbit-planet"
+            data-idx="3"
+            data-title="Cutest of all time"
+            data-story="Kamu itu seni yang jadi favoriteku. Pesona kamu selalu jadi juara 1 di hatiku."
+          >
+            <img
+              src="asset/4.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o4/150/150'"
+            />
+          </div>
+
+          <div
+            class="orbit-planet"
+            data-idx="4"
+            data-title="Shine Brightest Than The Stars"
+            data-story="And when my eyes see your face, the world fades away.."
+          >
+            <img
+              src="asset/5.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o5/150/150'"
+            />
+          </div>
+
+          <div
+            class="orbit-planet"
+            data-idx="5"
+            data-title="Why Do You Have To Be SO Cute"
+            data-story="Bahkan pas lagi rebahan santai kaya gini aja kamu tetep gemesin. Apapun versimu, aku selalu suka."
+          >
+            <img
+              src="asset/6.jpg"
+              alt="her"
+              onerror="this.src = 'https://picsum.photos/seed/o6/150/150'"
+            />
+          </div>
+        </div>
+      </div>
+
+      <p class="orbit-hint reveal">
+        drag untuk memutar orbit · tap planet untuk fokus
+      </p>
+
+      <div class="orbit-story-panel reveal" id="orbit-story">
+        <h3>sentuh planet untuk melihat bagaimana kamu di mataku.</h3>
+        <p>Kamu yang selalu jadi pusat dari semua perhatianku.</p>
+      </div>
+
+      <div
+        class="reveal"
+        style="
+          max-width: 700px;
+          margin: 3rem auto;
+          padding: 0 2rem;
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            font-family: var(--f-script);
+            font-size: 2rem;
+            color: var(--aurora);
+            margin-bottom: 1.5rem;
+          "
+        >
+          looking forward to many more of you in the future...
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <div
+            style="
+              background: rgba(27, 10, 61, 0.5);
+              border: 1px solid rgba(192, 132, 252, 0.15);
+              border-radius: 12px;
+              overflow: hidden;
+              width: 140px;
+            "
+          >
+            <img
+              src="asset/8.jpg"
+              alt="her"
+              style="
+                width: 100%;
+                aspect-ratio: 3/4;
+                object-fit: cover;
+                display: block;
+                opacity: 0.8;
+              "
+              onerror="this.src = 'https://picsum.photos/seed/o8/140/186'"
+            />
+          </div>
+          <div
+            style="
+              background: rgba(27, 10, 61, 0.5);
+              border: 1px solid rgba(192, 132, 252, 0.15);
+              border-radius: 12px;
+              overflow: hidden;
+              width: 140px;
+            "
+          >
+            <img
+              src="asset/9.jpg"
+              alt="her"
+              style="
+                width: 100%;
+                aspect-ratio: 3/4;
+                object-fit: cover;
+                display: block;
+                opacity: 0.8;
+              "
+              onerror="this.src = 'https://picsum.photos/seed/o9/140/186'"
+            />
+          </div>
+          <div
+            style="
+              background: rgba(27, 10, 61, 0.5);
+              border: 1px solid rgba(192, 132, 252, 0.15);
+              border-radius: 12px;
+              overflow: hidden;
+              width: 140px;
+            "
+          >
+            <img
+              src="asset/13.jpg"
+              alt="her"
+              style="
+                width: 100%;
+                aspect-ratio: 3/4;
+                object-fit: cover;
+                display: block;
+                opacity: 0.8;
+              "
+              onerror="this.src = 'https://picsum.photos/seed/o13/140/186'"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          padding: 3rem 2rem 6rem;
+          position: relative;
+          z-index: 2;
+        "
+      >
+        <a href="game.html" class="gate-btn reveal" data-nav>
+          <span>next mission</span><span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

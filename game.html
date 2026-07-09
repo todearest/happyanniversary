@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>First Mission — Nebula Diary</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Font Setup yang Konsisten -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Outfit:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Game page dark override */
+      body {
+        background: #050d0a;
+      }
+      .aurora-band-1 {
+        background: radial-gradient(
+          ellipse,
+          rgba(16, 185, 129, 0.18),
+          transparent 70%
+        ) !important;
+      }
+      .aurora-band-2 {
+        background: radial-gradient(
+          ellipse,
+          rgba(61, 21, 96, 0.35),
+          transparent 70%
+        ) !important;
+      }
+      .aurora-band-3 {
+        background: radial-gradient(
+          ellipse,
+          rgba(16, 185, 129, 0.08),
+          transparent 70%
+        ) !important;
+      }
+
+      /* Override starfield color slightly toward green */
+      #starfield {
+        opacity: 0.7;
+      }
+
+      /* Progress bar */
+      .mission-progress {
+        margin: 1.5rem 0;
+      }
+      .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Courier New", monospace;
+        font-size: 0.75rem;
+        color: rgba(16, 185, 129, 0.8);
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+      .progress-track {
+        height: 6px;
+        background: rgba(16, 185, 129, 0.15);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--green), var(--lavender));
+        border-radius: 3px;
+        width: 0;
+        transition: width 2s ease 1s;
+      }
+
+      /* Achievement badge */
+      .achievement {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        border-radius: 8px;
+        padding: 1rem 1.2rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s;
+        cursor: default;
+      }
+      .achievement:hover {
+        background: rgba(16, 185, 129, 0.14);
+        border-color: rgba(16, 185, 129, 0.5);
+        transform: translateY(-2px);
+      }
+      .achievement-icon {
+        font-size: 1.8rem;
+      }
+      .achievement-text h4 {
+        font-family: var(--f-body);
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--ice);
+        letter-spacing: 1px;
+      }
+      .achievement-text p {
+        font-family: "Courier New", monospace;
+        font-size: 0.7rem;
+        color: rgba(16, 185, 129, 0.7);
+        margin-top: 4px;
+      }
+
+      /* Sweet message box */
+      .love-note-box {
+        background: rgba(61, 21, 96, 0.35);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(192, 132, 252, 0.3);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        margin: 2.5rem 0;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+      .love-note-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--electric),
+          var(--lavender),
+          var(--aurora)
+        );
+      }
+      .love-note-label {
+        font-family: var(--f-body);
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--lavender);
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .love-note-text {
+        font-family: var(--f-script);
+        font-size: 2rem;
+        color: var(--ice);
+        line-height: 1.4;
+        font-weight: 600;
+      }
+
+      /* Pixel corner deco */
+      .pixel-corner {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-color: var(--green);
+        border-style: solid;
+      }
+      .pixel-corner.tl {
+        top: 0;
+        left: 0;
+        border-width: 2px 0 0 2px;
+      }
+      .pixel-corner.tr {
+        top: 0;
+        right: 0;
+        border-width: 2px 2px 0 0;
+      }
+      .pixel-corner.bl {
+        bottom: 0;
+        left: 0;
+        border-width: 0 0 2px 2px;
+      }
+      .pixel-corner.br {
+        bottom: 0;
+        right: 0;
+        border-width: 0 2px 2px 0;
+      }
+
+      /* Photo reveal on tap/hover */
+      .game-shot-frame {
+        cursor: pointer;
+        position: relative;
+      }
+      .game-shot-reveal {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        background: rgba(5, 13, 10, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 6px;
+        transition: opacity 0.5s ease;
+      }
+      .game-shot-reveal.gone {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .game-shot-reveal p {
+        font-family: "Courier New", monospace;
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: var(--green);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .game-shot-reveal .tap-icon {
+        font-size: 2.2rem;
+        animation: twinkle 1.5s ease-in-out infinite;
+      }
+
+      /* Next page CTA */
+      .game-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "Courier New", monospace;
+        font-size: 0.85rem;
+        font-weight: bold;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--green);
+        text-decoration: none;
+        border: 2px solid rgba(16, 185, 129, 0.4);
+        padding: 16px 36px;
+        border-radius: 4px;
+        background: rgba(16, 185, 129, 0.08);
+        backdrop-filter: blur(12px);
+        transition: all 0.4s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      .game-cta:hover {
+        border-color: var(--green);
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
+        background: rgba(16, 185, 129, 0.15);
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <div class="aurora-bg">
+      <div class="aurora-band aurora-band-1"></div>
+      <div class="aurora-band aurora-band-2"></div>
+      <div class="aurora-band aurora-band-3"></div>
+    </div>
+    <div id="page-transition"></div>
+
+    <!-- Scanlines overlay -->
+    <div class="game-scanlines"></div>
+    <div class="game-scanline-sweep"></div>
+
+    <a
+      href="us.html"
+      class="back-nav"
+      data-nav
+      style="
+        border-color: rgba(16, 185, 129, 0.3);
+        color: rgba(16, 185, 129, 0.9);
+      "
+      >← orbitku, kamu</a
+    >
+
+    <div id="music-player">
+      <button id="music-btn">♫</button>
+      <div class="music-meta">
+        <span class="music-title">Our Song</span>
+        <span class="music-artist">For You</span>
+      </div>
+      <div class="music-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+     GAME HUD
+     ══════════════════════════════ -->
+    <div class="game-hud-frame" style="position: relative; z-index: 2">
+      <!-- Header HUD -->
+      <div class="game-hud-header reveal">
+        <div class="pixel-corner tl"></div>
+        <div class="pixel-corner tr"></div>
+        <div class="pixel-corner bl"></div>
+        <div class="pixel-corner br"></div>
+        <span class="game-hud-tag">02 / 04 · mission file · classified</span>
+        <h1 class="game-hud-title">First <em>Mission</em></h1>
+        <div class="game-hud-coords">
+          PLAYER_1: you · PLAYER_2: me · STATUS: online together
+        </div>
+        <!-- Mission progress -->
+        <div class="mission-progress">
+          <div class="progress-label">
+            <span>MISSION PROGRESS</span>
+            <span id="prog-pct">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="prog-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Context text -->
+      <p
+        class="reveal"
+        style="
+          font-family: var(--f-body);
+          font-size: 1.05rem;
+          font-weight: 300;
+          font-style: italic;
+          color: rgba(16, 185, 129, 0.8);
+          line-height: 1.8;
+          margin-bottom: 2rem;
+          letter-spacing: 0.5px;
+        "
+      >
+        Ini bukan sekadar game. Ini adalah dunia kotak-kotak pertama yang kita
+        mainin bareng — dan jujur, aku gak akan pernah lupa serunya mabar sama
+        kamu.
+      </p>
+
+      <!-- Game screenshots — tap to reveal -->
+      <div class="game-screenshots reveal">
+        <!-- Photo 10 -->
+        <div
+          class="game-shot-frame"
+          onclick="
+            this.querySelector('.game-shot-reveal').classList.add('gone')
+          "
+        >
+          <img
+            src="asset/10.jpg"
+            alt="First game together"
+            onerror="this.src = 'https://picsum.photos/seed/game10/400/300'"
+          />
+          <div class="game-shot-label">SCREENSHOT_001 · AKU -- KAMU</div>
+          <div class="game-shot-reveal">
+            <div class="pixel-corner tl"></div>
+            <div class="pixel-corner tr"></div>
+            <div class="pixel-corner bl"></div>
+            <div class="pixel-corner br"></div>
+            <div class="tap-icon">👆</div>
+            <p>tap to decode</p>
+          </div>
+        </div>
+        <!-- Photo 11 -->
+        <div
+          class="game-shot-frame"
+          onclick="
+            this.querySelector('.game-shot-reveal').classList.add('gone')
+          "
+        >
+          <img
+            src="asset/11.jpg"
+            alt="First game together"
+            onerror="this.src = 'https://picsum.photos/seed/game11/400/300'"
+          />
+          <div class="game-shot-label">SCREENSHOT_002 · MABAR PERTAMA KITA</div>
+          <div class="game-shot-reveal">
+            <div class="pixel-corner tl"></div>
+            <div class="pixel-corner tr"></div>
+            <div class="pixel-corner bl"></div>
+            <div class="pixel-corner br"></div>
+            <div class="tap-icon">👆</div>
+            <p>tap to decode</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission stats -->
+      <div class="game-stats reveal">
+        <div class="game-stat">
+          <span class="game-stat-val">01</span>
+          <span class="game-stat-lbl">dunia pertama</span>
+        </div>
+        <div class="game-stat">
+          <span class="game-stat-val">2P</span>
+          <span class="game-stat-lbl">co-op mode</span>
+        </div>
+        <div class="game-stat">
+          <span class="game-stat-val">∞</span>
+          <span class="game-stat-lbl">respawn together</span>
+        </div>
+      </div>
+
+      <!-- Achievement badges -->
+      <div class="reveal" style="margin: 2.5rem 0">
+        <div
+          style="
+            font-family: &quot;Courier New&quot;, monospace;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(16, 185, 129, 0.7);
+            margin-bottom: 1rem;
+          "
+        >
+          [ ACHIEVEMENTS UNLOCKED ]
+        </div>
+        <div class="achievement">
+          <span class="achievement-icon">🎮</span>
+          <div class="achievement-text">
+            <h4>FIRST LOG-IN TOGETHER</h4>
+            <p>misi awal yang selalu seru buat dikenang</p>
+          </div>
+        </div>
+        <div class="achievement">
+          <span class="achievement-icon">🛸</span>
+          <div class="achievement-text">
+            <h4>CO-OP UNLOCKED</h4>
+            <p>dari mabar virtual ke partner di dunia nyata</p>
+          </div>
+        </div>
+        <div class="achievement">
+          <span class="achievement-icon">💜</span>
+          <div class="achievement-text">
+            <h4>BEST TEAMMATE</h4>
+            <p>kamu, selalu jadi player 2 favoritku</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission log typeout -->
+      <div class="game-mission-log reveal">
+        <div class="game-log-header">
+          <div class="game-log-dot"></div>
+          <span>MISSION LOG — INCOMING TRANSMISSION</span>
+        </div>
+        <!-- Data-text diubah menjadi lebih kasual dan manis -->
+        <div
+          class="game-log-text"
+          id="game-log-text"
+          data-text="Inget gak waktu pertama kali kita mabar ini?
+Aku selalu bersyukur untuk semua waktu yang udah kita lewatin bareng, ketawa-ketawa di dunia yang sama.
+
+Dari sekedar menjelajah dunia dalam layar bersama aku sadar, hal sesepele main game aja bisa jadi kenangan seru kalau mainnya sama kamu.
+
+Makasih ya udah mau jadi the best teammate for me.
+Kapanpun kamu mau main, aku selalu siap nemenin, di dalam dunia jenis apapun.
+
+         — player_1 (me)"
+        >
+          <span class="game-log-cursor"></span>
+        </div>
+      </div>
+
+      <!-- Sweet note (tonal contrast) -->
+      <div class="love-note-box reveal">
+        <span class="love-note-label">✦ pesan dari luar HUD</span>
+        <p class="love-note-text">
+          "Dari semua server dan map yang pernah kita explore bareng, ada di
+          sebelah kamu adalah spot favoritku."
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align: center; padding: 3rem 0 5rem">
+        <a href="letter.html" class="game-cta reveal" data-nav>
+          <span>buka transmisi</span><span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      // Animate progress bar on load
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const fill = document.getElementById("prog-fill");
+          const pct = document.getElementById("prog-pct");
+          if (fill) fill.style.width = "100%";
+          // Count up
+          let v = 0;
+          const t = setInterval(() => {
+            v = Math.min(100, v + 2);
+            if (pct) pct.textContent = v + "%";
+            if (v >= 100) clearInterval(t);
+          }, 35);
+        }, 1200);
+      });
+    </script>
+  </body>
+</html>

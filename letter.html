@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transmisi — Nebula Diary</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📡</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Unique layout: full-bleed hero with gradient floor */
+      .transmission-hero {
+        background:
+          radial-gradient(
+            ellipse at 50% 30%,
+            rgba(123, 47, 190, 0.3),
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 80% 80%,
+            rgba(240, 171, 252, 0.08),
+            transparent 50%
+          );
+      }
+
+      /* Floating photo beside letter */
+      .letter-photo-float {
+        position: absolute;
+        right: -20px;
+        top: 50%;
+        transform: translateY(-50%) rotate(3deg);
+        width: 120px;
+        background: rgba(27, 10, 61, 0.8);
+        border: 1px solid rgba(192, 132, 252, 0.2);
+        padding: 6px 6px 28px;
+        border-radius: 4px;
+        box-shadow: 0 15px 40px rgba(10, 5, 20, 0.5);
+        transition: transform 0.3s;
+      }
+      .letter-photo-float:hover {
+        transform: translateY(-50%) rotate(0deg) scale(1.04);
+      }
+      .letter-photo-float img {
+        width: 100%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.9);
+      }
+      .letter-photo-float-caption {
+        font-family: var(--f-script);
+        font-size: 0.9rem;
+        color: var(--lavender);
+        text-align: center;
+        margin-top: 4px;
+      }
+      @media (max-width: 768px) {
+        .letter-photo-float {
+          display: none;
+        }
+      }
+
+      /* Second floating photo — left side */
+      .letter-photo-float-2 {
+        position: absolute;
+        left: -20px;
+        bottom: 80px;
+        transform: rotate(-4deg);
+        width: 100px;
+        background: rgba(27, 10, 61, 0.8);
+        border: 1px solid rgba(192, 132, 252, 0.15);
+        padding: 5px 5px 22px;
+        border-radius: 4px;
+        box-shadow: 0 12px 30px rgba(10, 5, 20, 0.4);
+        transition: transform 0.3s;
+      }
+      .letter-photo-float-2:hover {
+        transform: rotate(0deg) scale(1.04);
+      }
+      .letter-photo-float-2 img {
+        width: 100%;
+        aspect-ratio: 3/4;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.85);
+      }
+      @media (max-width: 768px) {
+        .letter-photo-float-2 {
+          display: none;
+        }
+      }
+
+      /* Decorative constellation lines behind letter */
+      .letter-bg-const {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .letter-bg-const svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.06;
+      }
+
+      /* Mood photos grid below letter */
+      .letter-mood-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+        max-width: 500px;
+        margin: 3rem auto 0;
+      }
+      .letter-mood-tile {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(192, 132, 252, 0.12);
+        aspect-ratio: 3/4;
+        background: rgba(27, 10, 61, 0.4);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .letter-mood-tile:hover {
+        transform: scale(1.04) rotate(0.5deg);
+        box-shadow: 0 10px 30px rgba(123, 47, 190, 0.2);
+      }
+      .letter-mood-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.85) saturate(0.9);
+        transition: filter 0.4s;
+      }
+      .letter-mood-tile:hover img {
+        filter: brightness(1) saturate(1.1);
+      }
+
+      /* Transmission received label */
+      .tx-received {
+        font-family: var(--f-body);
+        font-size: 0.65rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--lavender);
+        text-align: center;
+        margin: 1.5rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .tx-received::before,
+      .tx-received::after {
+        content: "";
+        flex: 1;
+        max-width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(192, 132, 252, 0.3)
+        );
+      }
+      .tx-received::after {
+        background: linear-gradient(
+          270deg,
+          transparent,
+          rgba(192, 132, 252, 0.3)
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <div class="aurora-bg">
+      <div class="aurora-band aurora-band-1"></div>
+      <div class="aurora-band aurora-band-2"></div>
+      <div class="aurora-band aurora-band-3"></div>
+    </div>
+    <div id="page-transition"></div>
+
+    <a href="game.html" class="back-nav" data-nav>← mission</a>
+
+    <div id="music-player">
+      <button id="music-btn">♫</button>
+      <div class="music-meta">
+        <span class="music-title">Our Song</span>
+        <span class="music-artist">For You</span>
+      </div>
+      <div class="music-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+     HERO — SIGNAL TRANSMISSION
+     ══════════════════════════════ -->
+    <section class="transmission-hero letter-page">
+      <span class="tx-badge"
+        >03 / 04 &nbsp;·&nbsp; incoming transmission &nbsp;·&nbsp;
+        encrypted</span
+      >
+
+      <h1 class="tx-hero-title">Sebuah</h1>
+      <div class="tx-hero-name">Surat</div>
+      <p class="tx-hero-sub">
+        dari hati yang butuh waktu lama untuk menemukan kata yang tepat
+      </p>
+
+      <!-- Radio wave visual -->
+      <div class="radio-waves">
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+        <div class="radio-bar"></div>
+      </div>
+
+      <!-- Decorative floating photo in hero -->
+      <div
+        style="
+          position: relative;
+          z-index: 3;
+          margin-top: 2.5rem;
+          display: inline-block;
+        "
+      >
+        <div
+          style="
+            background: rgba(27, 10, 61, 0.7);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            padding: 8px 8px 32px;
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(10, 5, 20, 0.5);
+            transform: rotate(-2deg);
+            display: inline-block;
+          "
+        >
+          <img
+            src="asset/12.jpg"
+            alt="her"
+            style="
+              width: 140px;
+              height: 186px;
+              object-fit: cover;
+              display: block;
+              filter: brightness(0.9);
+            "
+            onerror="this.src = 'https://picsum.photos/seed/lhero/140/186'"
+          />
+          <span
+            style="
+              font-family: var(--f-script);
+              font-size: 1rem;
+              color: var(--lavender);
+              display: block;
+              text-align: center;
+              margin-top: 6px;
+            "
+            >kamu 💜</span
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+     LETTER — TYPING
+     ══════════════════════════════ -->
+    <div class="letter-panel-wrap">
+      <div class="tx-received reveal">transmission received</div>
+
+      <div class="letter-panel reveal" style="position: relative">
+        <!-- Bg constellation -->
+        <div class="letter-bg-const">
+          <svg viewBox="0 0 660 600" xmlns="http://www.w3.org/2000/svg">
+            <line
+              x1="80"
+              y1="100"
+              x2="220"
+              y2="60"
+              stroke="#C084FC"
+              stroke-width="1"
+            />
+            <line
+              x1="220"
+              y1="60"
+              x2="350"
+              y2="130"
+              stroke="#C084FC"
+              stroke-width="1"
+            />
+            <line
+              x1="350"
+              y1="130"
+              x2="500"
+              y2="80"
+              stroke="#C084FC"
+              stroke-width="1"
+            />
+            <line
+              x1="100"
+              y1="300"
+              x2="280"
+              y2="280"
+              stroke="#C084FC"
+              stroke-width="1"
+            />
+            <line
+              x1="280"
+              y1="280"
+              x2="400"
+              y2="350"
+              stroke="#C084FC"
+              stroke-width="1"
+            />
+            <circle cx="80" cy="100" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="220" cy="60" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="350" cy="130" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="500" cy="80" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="100" cy="300" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="280" cy="280" r="3" fill="#C084FC" opacity=".5" />
+            <circle cx="400" cy="350" r="3" fill="#C084FC" opacity=".5" />
+          </svg>
+        </div>
+
+        <!-- Floating polaroid photos on the paper -->
+        <div class="letter-photo-float">
+          <img
+            src="asset/4.jpg"
+            alt="us"
+            onerror="this.src = 'https://picsum.photos/seed/lf1/120/160'"
+          />
+          <div class="letter-photo-float-caption">kita 🌙</div>
+        </div>
+        <div class="letter-photo-float-2">
+          <img
+            src="asset/6.jpg"
+            alt="us"
+            onerror="this.src = 'https://picsum.photos/seed/lf2/100/133'"
+          />
+        </div>
+
+        <p class="letter-from">transmisi dari: dia · kepada: kamu · selalu</p>
+        <span class="letter-to">Sayang,</span>
+
+        <!-- The letter types out here -->
+        <div class="letter-body" id="letter-output"></div>
+
+        <span class="letter-sign" id="letter-sign">— selalu milikmu 💜</span>
+      </div>
+
+      <!-- Mood photo grid below letter -->
+      <div class="letter-mood-grid reveal">
+        <div class="letter-mood-tile">
+          <img
+            src="asset/2.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/lm2/150/200'"
+          />
+        </div>
+        <div class="letter-mood-tile">
+          <img
+            src="asset/5.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/lm5/150/200'"
+          />
+        </div>
+        <div class="letter-mood-tile">
+          <img
+            src="asset/13.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/lm13/150/200'"
+          />
+        </div>
+      </div>
+
+      <div
+        style="
+          text-align: center;
+          padding: 4rem 2rem 6rem;
+          position: relative;
+          z-index: 2;
+        "
+      >
+        <a href="stars.html" class="gate-btn reveal" data-nav>
+          <span>lihat bintang-bintangmu</span><span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bintang-Bintangmu — Nebula Diary</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Page 5 — unique: warm purple dominant, feels like a final resting point */
+
+      /* Aurora shifts warmer on this page */
+      .aurora-band-1 {
+        background: radial-gradient(
+          ellipse,
+          rgba(240, 171, 252, 0.2),
+          transparent 70%
+        ) !important;
+      }
+      .aurora-band-2 {
+        background: radial-gradient(
+          ellipse,
+          rgba(123, 47, 190, 0.5),
+          transparent 70%
+        ) !important;
+      }
+      .aurora-band-3 {
+        background: radial-gradient(
+          ellipse,
+          rgba(252, 211, 77, 0.06),
+          transparent 70%
+        ) !important;
+      }
+
+      /* Stars page header — script-heavy, intimate */
+      .stars-hero-big {
+        padding: 8rem 2rem 2rem;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .stars-hero-big .pre {
+        font-family: var(--f-body);
+        font-size: 0.68rem;
+        font-weight: 300;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--lavender);
+        margin-bottom: 1.5rem;
+        display: block;
+        opacity: 0;
+        animation: fadeUp 0.8s ease forwards 0.3s;
+      }
+      .stars-hero-big h1 {
+        font-family: var(--f-script);
+        font-size: clamp(4rem, 12vw, 9rem);
+        color: var(--aurora);
+        line-height: 0.95;
+        text-shadow: 0 0 60px rgba(240, 171, 252, 0.4);
+        opacity: 0;
+        animation: fadeUp 0.9s ease forwards 0.5s;
+      }
+      .stars-hero-big p {
+        font-family: var(--f-body);
+        font-size: 1rem;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--txt-dim);
+        margin-top: 1.2rem;
+        line-height: 1.8;
+        opacity: 0;
+        animation: fadeUp 0.9s ease forwards 0.7s;
+      }
+
+      /* Instruction */
+      .sky-instruction {
+        font-family: var(--f-body);
+        font-size: 0.72rem;
+        font-weight: 300;
+        letter-spacing: 2px;
+        color: rgba(192, 132, 252, 0.45);
+        text-align: center;
+        margin: 1rem auto 0;
+        text-transform: uppercase;
+      }
+
+      /* Promise section — very final, emotional */
+      .promise-section {
+        position: relative;
+        z-index: 2;
+        max-width: 620px;
+        margin: 3rem auto 0;
+        padding: 0 2rem 5rem;
+        text-align: center;
+      }
+      .promise-divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 3rem 0;
+      }
+      .promise-divider::before,
+      .promise-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(192, 132, 252, 0.25)
+        );
+      }
+      .promise-divider::after {
+        background: linear-gradient(
+          270deg,
+          transparent,
+          rgba(192, 132, 252, 0.25)
+        );
+      }
+      .promise-divider span {
+        font-size: 1.2rem;
+        opacity: 0.5;
+      }
+
+      .promise-text {
+        font-family: var(--f-display);
+        font-size: clamp(1.2rem, 3vw, 1.7rem);
+        color: var(--ice);
+        line-height: 1.75;
+        margin-bottom: 1.2rem;
+      }
+      .promise-sub {
+        font-family: var(--f-body);
+        font-size: 0.9rem;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--txt-dim);
+        line-height: 1.9;
+        margin-bottom: 2.5rem;
+      }
+
+      /* Final photo polaroid collage */
+      .final-collage {
+        display: flex;
+        gap: 1.2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 3rem auto;
+        max-width: 500px;
+      }
+      .collage-frame {
+        background: rgba(27, 10, 61, 0.7);
+        border: 1px solid rgba(192, 132, 252, 0.15);
+        padding: 8px 8px 32px;
+        border-radius: 3px;
+        box-shadow: 0 15px 40px rgba(10, 5, 20, 0.4);
+        transition: transform 0.4s ease;
+      }
+      .collage-frame:nth-child(1) {
+        transform: rotate(-3deg);
+      }
+      .collage-frame:nth-child(2) {
+        transform: rotate(1.5deg);
+        margin-top: -10px;
+      }
+      .collage-frame:nth-child(3) {
+        transform: rotate(-1deg);
+        margin-top: 8px;
+      }
+      .collage-frame:hover {
+        transform: rotate(0deg) scale(1.04) !important;
+      }
+      .collage-frame img {
+        width: 130px;
+        height: 170px;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.88);
+      }
+      .collage-caption {
+        font-family: var(--f-script);
+        font-size: 0.95rem;
+        color: var(--lavender);
+        text-align: center;
+        margin-top: 6px;
+      }
+
+      /* Back to start link */
+      .back-start {
+        display: inline-block;
+        font-family: var(--f-body);
+        font-size: 0.72rem;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--txt-dim);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+        padding-bottom: 2px;
+        transition: all 0.3s;
+        margin-top: 1rem;
+      }
+      .back-start:hover {
+        color: var(--lavender);
+        border-color: var(--lavender);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <div class="aurora-bg">
+      <div class="aurora-band aurora-band-1"></div>
+      <div class="aurora-band aurora-band-2"></div>
+      <div class="aurora-band aurora-band-3"></div>
+    </div>
+    <div id="page-transition"></div>
+
+    <div class="star-card-overlay" id="star-overlay"></div>
+    <div class="star-card" id="star-card">
+      <span class="star-card-icon" id="sc-icon">✨</span>
+      <h3 id="sc-title">Judul</h3>
+      <p id="sc-body">isi pesan</p>
+      <div class="star-card-close" id="sc-close">tutup &nbsp;✦</div>
+    </div>
+
+    <a href="letter.html" class="back-nav" data-nav>← transmisi</a>
+
+    <div id="music-player">
+      <button id="music-btn">♫</button>
+      <div class="music-meta">
+        <span class="music-title">Our Song</span>
+        <span class="music-artist">For You</span>
+      </div>
+      <div class="music-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="stars-hero-big">
+      <span class="pre"
+        >04 / 04 &nbsp;·&nbsp; final chapter &nbsp;·&nbsp; untuk kamu</span
+      >
+      <h1>Bintang-<br />bintangmu</h1>
+      <p>
+        kamu adalah alasan kenapa langit malam ini<br />
+        terasa lebih dekat dari biasanya.
+      </p>
+    </div>
+
+    <div style="position: relative; z-index: 2; padding: 0 1rem">
+      <p class="sky-instruction reveal">
+        sentuh setiap bintang untuk membuka pesannya ✦
+      </p>
+
+      <div class="star-sky reveal" id="star-sky">
+        <div
+          class="wish-star"
+          style="
+            left: 18%;
+            top: 22%;
+            animation-duration: 2.8s;
+            font-size: 1.4rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 32%;
+            top: 14%;
+            animation-duration: 3.5s;
+            animation-delay: 0.5s;
+            font-size: 1rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 50%;
+            top: 18%;
+            animation-duration: 2.2s;
+            animation-delay: 0.8s;
+            font-size: 1.6rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 70%;
+            top: 25%;
+            animation-duration: 3.8s;
+            animation-delay: 0.3s;
+            font-size: 1.1rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 42%;
+            top: 48%;
+            animation-duration: 2.6s;
+            animation-delay: 1s;
+            font-size: 1.8rem;
+            color: var(--aurora);
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 22%;
+            top: 65%;
+            animation-duration: 3.2s;
+            animation-delay: 0.2s;
+            font-size: 1.1rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 72%;
+            top: 68%;
+            animation-duration: 2.9s;
+            animation-delay: 0.7s;
+            font-size: 1.3rem;
+          "
+        >
+          ★
+        </div>
+        <div
+          class="wish-star"
+          style="
+            left: 85%;
+            top: 15%;
+            animation-duration: 4s;
+            animation-delay: 1.2s;
+            font-size: 0.9rem;
+          "
+        >
+          ★
+        </div>
+
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(192, 132, 252, 0.3);
+            left: 10%;
+            top: 40%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(192, 132, 252, 0.3);
+            left: 60%;
+            top: 55%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(224, 242, 254, 0.25);
+            left: 38%;
+            top: 80%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(224, 242, 254, 0.25);
+            left: 78%;
+            top: 45%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(192, 132, 252, 0.2);
+            left: 5%;
+            top: 72%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+        <div
+          style="
+            position: absolute;
+            font-size: 0.5rem;
+            color: rgba(192, 132, 252, 0.2);
+            left: 92%;
+            top: 60%;
+            pointer-events: none;
+          "
+        >
+          ·
+        </div>
+
+        <div
+          style="
+            position: absolute;
+            top: 8%;
+            right: 8%;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #fffde8, #fcd34d);
+            box-shadow: 0 0 20px rgba(252, 211, 77, 0.3);
+            pointer-events: none;
+          "
+        ></div>
+      </div>
+
+      <p class="sky-instruction" style="margin-top: 0.8rem; opacity: 0.3">
+        ada 8 bintang — temukan semua pesannya ✦
+      </p>
+    </div>
+
+    <section class="promise-section">
+      <div class="promise-divider reveal"><span>✦</span></div>
+
+      <h2
+        class="reveal"
+        style="
+          font-family: var(--f-display);
+          font-size: clamp(1.8rem, 4vw, 2.8rem);
+          color: var(--ice);
+          margin-bottom: 1rem;
+        "
+      >
+        Dan satu janji,<br />di antara bintang-bintang.
+      </h2>
+
+      <p class="promise-text reveal">
+        Aku mungkin bukan yang sempurna. Aku pasti masih akan salah, masih akan
+        bikin kamu kesal, masih akan belajar.
+      </p>
+      <p class="promise-sub reveal">
+        Tapi di antara semua ketidakpastian itu, ada satu hal yang aku
+        yakinin:<br />
+        aku mau terus ada buat kamu. Mau terus milih kamu. Setiap hari, di
+        setiap semesta yang ada.
+      </p>
+
+      <div class="seal-section reveal">
+        <p style="margin-bottom: 1.5rem">
+          tahan tombol di bawah untuk segel janjinya 💜
+        </p>
+        <button class="seal-btn" aria-label="Hold to seal">
+          <span style="position: relative; z-index: 2">💜</span>
+          <div class="seal-ring-fill"></div>
+        </button>
+        <p class="seal-hint">tahan sampai penuh ✦</p>
+      </div>
+
+      <div class="final-collage reveal">
+        <div class="collage-frame">
+          <img
+            src="asset/3.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/fc3/130/170'"
+          />
+          <div class="collage-caption">kamu 🌸</div>
+        </div>
+        <div class="collage-frame">
+          <img
+            src="asset/7.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/fc7/130/170'"
+          />
+          <div class="collage-caption">selalu 💜</div>
+        </div>
+        <div class="collage-frame">
+          <img
+            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHJoajNtdjZ2cmE3ZTk3NHdhczl4cTYzeWZucmpjMmx3cHVjajM5byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/oyGTQIb6QABscZMmbR/giphy.gif"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/fc9/130/170'"
+          />
+          <div class="collage-caption">to forever and more✦</div>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top: 3rem">
+        <p
+          style="
+            font-family: var(--f-script);
+            font-size: 2.5rem;
+            color: var(--aurora);
+            margin-bottom: 0.5rem;
+          "
+        >
+          I love you so much, sayang.
+        </p>
+        <p
+          style="
+            font-family: var(--f-body);
+            font-size: 0.82rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--txt-dim);
+            letter-spacing: 1px;
+          "
+        >
+          happy anniversary. ❤️
+        </p>
+      </div>
+
+      <div class="promise-divider reveal"><span>✦</span></div>
+
+      <a href="index.html" class="back-start reveal" data-nav
+        >↑ kembali ke awal semesta</a
+      >
+    </section>
+
+    <div style="height: 60px"></div>
+
+    <script src="script.js"></script>
+    <script>
+      // Execute immediately instead of waiting for DOMContentLoaded (which fails in SPA)
+      (function initStarsPage() {
+        // 1. Re-initialize the background canvas if we arrived here via the SPA router
+        if (typeof initStarfield === "function") {
+          initStarfield();
+        }
+
+        // 2. Define the star wishes
+        window.STAR_WISHES = [
+          {
+            icon: "💜",
+            title: "Kamu adalah rumahku",
+            body: "Di antara semua tempat di dunia ini, bersamamu adalah tempat yang paling bikin aku merasa tenang. Kamu adalah pulang yang paling aku rindukan.",
+          },
+          {
+            icon: "🌙",
+            title: "Satu hal yang aku syukuri",
+            body: "Setiap hari aku bersyukur kita ada di garis waktu yang sama. Dari sekian banyak kemungkinan di alam semesta ini — aku ketemu kamu.",
+          },
+          {
+            icon: "✨",
+            title: "Tentang tawamu",
+            body: "Tawa kamu adalah salah satu suara favorit aku di dunia. Aku gak pernah bosen dengerin itu, dan aku gak mau bosen.",
+          },
+          {
+            icon: "🌸",
+            title: "Ketika kamu ada",
+            body: "Hal-hal kecil jadi terasa lebih bermakna. Makan bareng biasa aja jadi memorable. Duduk diem bareng pun cukup. Itu kamu — yang bikin semua momen jadi berarti.",
+          },
+          {
+            icon: "⭐",
+            title: "Kamu adalah bintang terbaikku",
+            body: "Di antara semua bintang di langit ini, kamu yang paling aku cari duluan. Yang paling aku perhatiin. Yang paling aku sayangin.",
+          },
+          {
+            icon: "💫",
+            title: "Maaf dan terima kasih",
+            body: "Makasi udah mau sabar sama semua kekuranganku. Dan maaf karena belum selalu bisa jadi yang kamu harapin. Aku masih belajar — tapi aku belajar buat kamu juga.",
+          },
+          {
+            icon: "🌌",
+            title: "Harapanku",
+            body: "Semoga kita masih bareng ngelewatin banyak hal. Hal-hal besar yang kita rencanain, dan hal-hal kecil yang gak pernah kita sangka. Dua-duanya, bareng kamu.",
+          },
+          {
+            icon: "❤️",
+            title: "Yang paling penting",
+            body: "I love you. Bukan cuma hari ini, bukan cuma di anniversary — tapi setiap hari, dalam setiap versi dari kita yang terus berubah. Selalu.",
+          },
+        ];
+
+        // 3. Wire up star card safely
+        const cardBox = document.getElementById("star-card");
+        const overlay = document.getElementById("star-overlay");
+
+        document.querySelectorAll(".wish-star").forEach((star, i) => {
+          // Clone node to strip any duplicate listeners from script.js to ensure it runs cleanly
+          const newStar = star.cloneNode(true);
+          star.parentNode.replaceChild(newStar, star);
+
+          newStar.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const w = window.STAR_WISHES[i];
+            if (!w) return;
+
+            document.getElementById("sc-icon").textContent = w.icon;
+            document.getElementById("sc-title").textContent = w.title;
+            document.getElementById("sc-body").textContent = w.body;
+
+            cardBox?.classList.add("show");
+            overlay?.classList.add("show");
+
+            // Mini burst effect
+            const rect = newStar.getBoundingClientRect();
+            ["✨", "💜", "⭐", "🌸"].forEach((em, k) => {
+              const sp = document.createElement("div");
+              sp.style.cssText = `position:fixed;left:${rect.left + 8}px;top:${rect.top + 8}px;font-size:.85rem;pointer-events:none;z-index:9999;transition:all .8s ease;`;
+              sp.textContent = em;
+              document.body.appendChild(sp);
+              const a = (k / 4) * Math.PI * 2,
+                d = 35 + Math.random() * 20;
+              setTimeout(() => {
+                sp.style.transform = `translate(${Math.cos(a) * d}px,${Math.sin(a) * d - 15}px)`;
+                sp.style.opacity = "0";
+              }, 60);
+              setTimeout(() => sp.remove(), 900);
+            });
+          });
+        });
+
+        function closeCard() {
+          cardBox?.classList.remove("show");
+          overlay?.classList.remove("show");
+        }
+
+        overlay?.addEventListener("click", closeCard);
+        document
+          .getElementById("sc-close")
+          ?.addEventListener("click", closeCard);
+      })();
+    </script>
+  </body>
+</html>

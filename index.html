@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Happy Anniversary 🌌</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💜</text></svg>"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Outfit:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <canvas id="starfield"></canvas>
+    <div class="aurora-bg">
+      <div class="aurora-band aurora-band-1"></div>
+      <div class="aurora-band aurora-band-2"></div>
+      <div class="aurora-band aurora-band-3"></div>
+    </div>
+    <div id="page-transition"></div>
+    <div class="warp-overlay" id="warp-overlay"></div>
+
+    <div id="music-player">
+      <button id="music-btn">♫</button>
+      <div class="music-meta">
+        <span class="music-title">Our Song</span>
+        <span class="music-artist">For You</span>
+      </div>
+      <div class="music-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="gate-layout">
+      <div class="gate-portrait-side">
+        <div class="orbit-deco orbit-deco-3"></div>
+        <div class="orbit-deco orbit-deco-2"></div>
+        <div class="orbit-deco orbit-deco-1"></div>
+        <div class="gate-portrait-glow"></div>
+        <div class="gate-portrait-frame">
+          <img
+            src="asset/1.jpg"
+            alt="her"
+            onerror="this.src = 'https://picsum.photos/seed/gate/400/520'"
+          />
+        </div>
+      </div>
+
+      <div class="gate-text-side">
+        <p class="gate-eyebrow">✦ &nbsp; untuk kamu, satu-satunya &nbsp; ✦</p>
+        <h1 class="gate-title">
+          Happy
+          <em>Anniversary</em>
+        </h1>
+        <p class="gate-tagline">
+          Di suatu titik di alam semesta ini,<br />
+          dua bintang memutuskan untuk bersinar bersama.
+        </p>
+        <a
+          href="#content"
+          class="gate-btn"
+          id="scroll-btn"
+          onclick="
+            document
+              .getElementById('content')
+              .scrollIntoView({ behavior: 'smooth' });
+            return false;
+          "
+        >
+          <span>masuk ke semesta kita</span>
+          <span>↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="gate-scroll-hint">
+      <div class="gate-scroll-dot"></div>
+      <div class="gate-scroll-dot"></div>
+      <div class="gate-scroll-dot"></div>
+    </div>
+
+    <section class="index-about reveal" id="content">
+      <h2>Semesta yang kita<br />bangun berdua.</h2>
+      <p>
+        Ada hal-hal yang susah dijelasin pake kata biasa. Jadi aku bikin ini —
+        sebuah ruang kecil di antara bintang-bintang, khusus buat kamu. Khusus
+        buat kita.
+      </p>
+      <p>
+        Jelajahi setiap halaman. Semuanya ada ceritanya. Semuanya adalah kamu.
+      </p>
+    </section>
+
+    <div class="index-nav-strip">
+      <a href="us.html" class="nav-strip-card reveal" data-nav>
+        <span class="nav-strip-icon">🪐</span>
+        <h3>Orbitku, Kamu</h3>
+        <p>putar orbit untuk membuka cerita cantikmu</p>
+      </a>
+
+      <a
+        href="game.html"
+        class="nav-strip-card reveal"
+        data-nav
+        style="transition-delay: 0.1s"
+      >
+        <span class="nav-strip-icon">🎮</span>
+        <h3>First Mission</h3>
+        <p>misi pertama kita bareng — di dunia lain</p>
+      </a>
+
+      <a
+        href="letter.html"
+        class="nav-strip-card reveal"
+        data-nav
+        style="transition-delay: 0.2s"
+      >
+        <span class="nav-strip-icon">📡</span>
+        <h3>Transmisi</h3>
+        <p>pesan yang dikirim dari hati ke hati</p>
+      </a>
+
+      <a
+        href="stars.html"
+        class="nav-strip-card reveal"
+        data-nav
+        style="transition-delay: 0.3s"
+      >
+        <span class="nav-strip-icon">✨</span>
+        <h3>Bintang-Bintangmu</h3>
+        <p>sentuh setiap bintang, temukan apa yang ada di baliknya</p>
+      </a>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
